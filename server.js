@@ -6,8 +6,8 @@ const path = require('path');
 const app = express();
 const usersFile = path.join(__dirname, 'users.json');
 
-app.use(cors());             // Enable CORS for all requests
-app.use(express.json());     // Parse JSON body
+app.use(cors());
+app.use(express.json());
 
 // Helper functions
 function readUsers() {
@@ -19,20 +19,14 @@ function writeUsers(users) {
   fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
 }
 
-// Sample user data
-const users = [
-  { id: 1, name: "Alice", email: "alice@example.com" },
-  { id: 2, name: "Bob", email: "bob@example.com" },
-];
-
 // GET /users - list users
 app.get('/users', (req, res) => {
   const users = readUsers();
   res.json(users);
 });
 
+// DELETE /users/:id - delete user by id
 app.delete('/users/:id', (req, res) => {
-    console.log('Delete user endpoint hit');
   const id = parseInt(req.params.id, 10);
   let users = readUsers();
   const userIndex = users.findIndex((user) => user.id === id);
@@ -60,8 +54,6 @@ app.post('/users', (req, res) => {
   writeUsers(users);
   res.status(201).json(newUser);
 });
-
-
 
 const port = 5000;
 app.listen(port, () => {
